@@ -16,30 +16,40 @@ pipeline {
                 CheckoutSCM()
             }
         }
-        parallel {
-            stage('Checker1') {
-                waitUntil {
-                    setBuildStatus("checker-1", "Checker1", "PENDING")
-                    try {
-                        TestWithFlaky()
-                        setBuildStatus("checker-1", "Checker1", "SUCCESS")
-                    } catch (error) {
-                        setBuildStatus("checker-1", "Checker1", "FAILURE")
-                        input "Retry the job?"
-                        false
+        stage('Checkers') {
+            parallel {
+                stage('Checker1') {
+                    steps {
+                        waitUntil {
+                            setBuildStatus("checker-1", "Checker1", "PENDING")
+                            script {
+                                try {
+                                    TestWithFlaky()
+                                    setBuildStatus("checker-1", "Checker1", "SUCCESS")
+                                } catch (error) {
+                                    setBuildStatus("checker-1", "Checker1", "FAILURE")
+                                    input "Retry the job?"
+                                    false
+                                }
+                            }
+                        }
                     }
                 }
-            }
-            stage('Checker2') {
-                waitUntil {
-                    setBuildStatus("checker-2", "Checker2", "PENDING")
-                    try {
-                        TestWithFlaky()
-                        setBuildStatus("checker-2", "Checker2", "SUCCESS")
-                    } catch (error) {
-                        setBuildStatus("checker-2", "Checker2", "FAILURE")
-                        input "Retry the job?"
-                        false
+                stage('Checker2') {
+                    steps {
+                        waitUntil {
+                            setBuildStatus("checker-2", "Checker2", "PENDING")
+                            script {
+                                try {
+                                    TestWithFlaky()
+                                    setBuildStatus("checker-2", "Checker2", "SUCCESS")
+                                } catch (error) {
+                                    setBuildStatus("checker-2", "Checker2", "FAILURE")
+                                    input "Retry the job?"
+                                    false
+                                }
+                            }
+                        }
                     }
                 }
             }
