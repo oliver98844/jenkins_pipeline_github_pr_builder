@@ -70,7 +70,7 @@ def CheckoutSCM() {
 }
 
 def TestWithFlaky() {
-    sh '''#!/bin/bash -l
+    def result = sh returnStatus: true, script: '''#!/bin/bash -l
     set -ex
     num=$(( ( RANDOM % 5 ) ))
     echo $num
@@ -79,6 +79,7 @@ def TestWithFlaky() {
 
     exit $num
     '''
+    return result == 0
 }
 
 void setBuildStatus(String context, String message, String state) {
