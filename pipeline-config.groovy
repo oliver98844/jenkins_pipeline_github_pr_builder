@@ -80,7 +80,7 @@ def TestWithFlaky() {
 void setBuildStatus(String context, String message, String state, String sha) {
   step([
       $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/oliver98844/jenkins_pipeline_github_pr_builder.git"],
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "git@github.com:oliver98844/jenkins_pipeline_github_pr_builder.git"],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: context],
       commitShaSource: [$class: "ManuallyEnteredShaSource", sha: sha ],
       statusBackrefSource: [$class: "ManuallyEnteredBackrefSource", backref: "${BUILD_URL}"],
