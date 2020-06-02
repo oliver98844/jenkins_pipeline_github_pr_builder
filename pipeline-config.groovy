@@ -16,7 +16,7 @@ pipeline {
                 CheckoutSCM()
             }
         }
-        stage('Checkers') {}
+        stage('Checkers') {
             parallel {
                 stage('Checker1') {
                     waitUntil {
