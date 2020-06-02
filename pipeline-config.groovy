@@ -54,6 +54,8 @@ def CheckoutSCM() {
     }
     
     sh '''
+    set -ex
+    echo ${sha1}
     '''   
 }
 
