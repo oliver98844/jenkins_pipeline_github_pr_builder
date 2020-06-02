@@ -22,13 +22,15 @@ pipeline {
                     steps {
                         waitUntil {
                             setBuildStatus("checker-1", "Checker1", "PENDING")
-                            try {
-                                TestWithFlaky()
-                                setBuildStatus("checker-1", "Checker1", "SUCCESS")
-                            } catch (error) {
-                                setBuildStatus("checker-1", "Checker1", "FAILURE")
-                                input "Retry the job?"
-                                false
+                            step {
+                                try {
+                                    TestWithFlaky()
+                                    setBuildStatus("checker-1", "Checker1", "SUCCESS")
+                                } catch (error) {
+                                    setBuildStatus("checker-1", "Checker1", "FAILURE")
+                                    input "Retry the job?"
+                                    false
+                                }
                             }
                         }
                     }
@@ -37,13 +39,15 @@ pipeline {
                     steps {
                         waitUntil {
                             setBuildStatus("checker-2", "Checker2", "PENDING")
-                            try {
-                                TestWithFlaky()
-                                setBuildStatus("checker-2", "Checker2", "SUCCESS")
-                            } catch (error) {
-                                setBuildStatus("checker-2", "Checker2", "FAILURE")
-                                input "Retry the job?"
-                                false
+                            step {
+                                try {
+                                    TestWithFlaky()
+                                    setBuildStatus("checker-2", "Checker2", "SUCCESS")
+                                } catch (error) {
+                                    setBuildStatus("checker-2", "Checker2", "FAILURE")
+                                    input "Retry the job?"
+                                    false
+                                }
                             }
                         }
                     }
