@@ -75,6 +75,8 @@ def TestWithFlaky() {
     num=$(( ( RANDOM % 5 ) ))
     echo $num
 
+    sleep $(( ( RANDOM % 10 ) + 1 ))
+
     exit $num
     '''
 }
