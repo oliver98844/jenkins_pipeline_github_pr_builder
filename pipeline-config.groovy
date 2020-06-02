@@ -20,33 +20,27 @@ pipeline {
             parallel {
                 stage('Checker1') {
                     steps {
-                        waitUntil {
-                            setBuildStatus("checker-1", "Checker1", "PENDING")
-                            script {
-                                if (TestWithFlaky()) {
-                                    setBuildStatus("checker-1", "Checker1", "SUCCESS")
-                                    return true
-                                }
-                                setBuildStatus("checker-1", "Checker1", "FAILURE")
-                                input "Retry the job?"
-                                return false
+                        setBuildStatus("checker-1", "Checker1", "PENDING")
+                        script {
+                            if (TestWithFlaky()) {
+                                setBuildStatus("checker-1", "Checker1", "SUCCESS")
+                                return true
                             }
+                            setBuildStatus("checker-1", "Checker1", "FAILURE")
+                            return false
                         }
                     }
                 }
                 stage('Checker2') {
                     steps {
-                        waitUntil {
-                            setBuildStatus("checker-2", "Checker2", "PENDING")
-                            script {
-                                if (TestWithFlaky()) {
-                                    setBuildStatus("checker-2", "Checker2", "SUCCESS")
-                                    return true
-                                }
-                                setBuildStatus("checker-2", "Checker2", "FAILURE")
-                                input "Retry the job?"
-                                return false
+                        setBuildStatus("checker-2", "Checker2", "PENDING")
+                        script {
+                            if (TestWithFlaky()) {
+                                setBuildStatus("checker-2", "Checker2", "SUCCESS")
+                                return true
                             }
+                            setBuildStatus("checker-2", "Checker2", "FAILURE")
+                            return false
                         }
                     }
                 }
@@ -75,7 +69,7 @@ def TestWithFlaky() {
     num=$(( ( RANDOM % 5 ) ))
     echo $num
 
-    sleep $(( ( RANDOM % 10 ) + 1 ))
+    sleep $(( num + 1 ))
 
     exit $num
     '''
@@ -85,7 +79,9 @@ def TestWithFlaky() {
 void setBuildStatus(String context, String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/oliver98844/jenkins_pipeline_github_pr_builder.git"],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: context],
+      commitShaSource: [$class: "ManuallyEnteredShaSource", sha: env.sha1 ],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
   ]);
 }
