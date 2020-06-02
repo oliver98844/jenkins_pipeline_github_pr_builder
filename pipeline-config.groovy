@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         OUTPUT_DIR = 'output/'
+        GIT_SHA = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
     }
 
     stages {
@@ -20,27 +21,27 @@ pipeline {
             parallel {
                 stage('Checker1') {
                     steps {
-                        setBuildStatus("checker-1", "Checker1", "PENDING")
+                        setBuildStatus("checker-1", "Checker1", "PENDING", GIT_SHA)
                         script {
                             if (TestWithFlaky()) {
-                                setBuildStatus("checker-1", "Checker1", "SUCCESS")
+                                setBuildStatus("checker-1", "Checker1", "SUCCESS", GIT_SHA)
                                 return true
                             }
-                            setBuildStatus("checker-1", "Checker1", "FAILURE")
-                            return false
+                            setBuildStatus("checker-1", "Checker1", "FAILURE", GIT_SHA)
+                            error "Checker1 failed"
                         }
                     }
                 }
                 stage('Checker2') {
                     steps {
-                        setBuildStatus("checker-2", "Checker2", "PENDING")
+                        setBuildStatus("checker-2", "Checker2", "PENDING", GIT_SHA)
                         script {
                             if (TestWithFlaky()) {
-                                setBuildStatus("checker-2", "Checker2", "SUCCESS")
+                                setBuildStatus("checker-2", "Checker2", "SUCCESS", GIT_SHA)
                                 return true
                             }
-                            setBuildStatus("checker-2", "Checker2", "FAILURE")
-                            return false
+                            setBuildStatus("checker-2", "Checker2", "FAILURE", GIT_SHA)
+                            error "Checker2 failed"
                         }
                     }
                 }
@@ -76,12 +77,13 @@ def TestWithFlaky() {
     return result == 0
 }
 
-void setBuildStatus(String context, String message, String state) {
+void setBuildStatus(String context, String message, String state, String sha) {
   step([
       $class: "GitHubCommitStatusSetter",
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/oliver98844/jenkins_pipeline_github_pr_builder.git"],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: context],
-      commitShaSource: [$class: "ManuallyEnteredShaSource", sha: env.sha1 ],
+      commitShaSource: [$class: "ManuallyEnteredShaSource", sha: sha ],
+      statusBackrefSource: [$class: "ManuallyEnteredBackrefSource", backref: "${BUILD_URL}"],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
   ]);
 }
