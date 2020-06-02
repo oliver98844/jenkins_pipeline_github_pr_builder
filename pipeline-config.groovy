@@ -26,6 +26,7 @@ pipeline {
                                 try {
                                     TestWithFlaky()
                                     setBuildStatus("checker-1", "Checker1", "SUCCESS")
+                                    true
                                 } catch (error) {
                                     setBuildStatus("checker-1", "Checker1", "FAILURE")
                                     input "Retry the job?"
@@ -43,6 +44,7 @@ pipeline {
                                 try {
                                     TestWithFlaky()
                                     setBuildStatus("checker-2", "Checker2", "SUCCESS")
+                                    true
                                 } catch (error) {
                                     setBuildStatus("checker-2", "Checker2", "FAILURE")
                                     input "Retry the job?"
