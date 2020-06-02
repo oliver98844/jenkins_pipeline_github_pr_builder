@@ -63,14 +63,14 @@ def CheckoutSCM() {
         deleteDir()
     }
     
-    sh '''
+    sh '''#!/bin/bash -l
     set -ex
     echo ${sha1}
     '''   
 }
 
 def TestWithFlaky() {
-    sh '''
+    sh '''#!/bin/bash -l
     set -ex
     num=$(( ( RANDOM % 5 ) ))
     echo $num
