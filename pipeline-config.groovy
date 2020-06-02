@@ -23,15 +23,13 @@ pipeline {
                         waitUntil {
                             setBuildStatus("checker-1", "Checker1", "PENDING")
                             script {
-                                try {
-                                    TestWithFlaky()
+                                if (TestWithFlaky()) {
                                     setBuildStatus("checker-1", "Checker1", "SUCCESS")
-                                    true
-                                } catch (error) {
-                                    setBuildStatus("checker-1", "Checker1", "FAILURE")
-                                    input "Retry the job?"
-                                    false
+                                    return true
                                 }
+                                setBuildStatus("checker-1", "Checker1", "FAILURE")
+                                input "Retry the job?"
+                                return false
                             }
                         }
                     }
@@ -41,15 +39,13 @@ pipeline {
                         waitUntil {
                             setBuildStatus("checker-2", "Checker2", "PENDING")
                             script {
-                                try {
-                                    TestWithFlaky()
+                                if (TestWithFlaky()) {
                                     setBuildStatus("checker-2", "Checker2", "SUCCESS")
-                                    true
-                                } catch (error) {
-                                    setBuildStatus("checker-2", "Checker2", "FAILURE")
-                                    input "Retry the job?"
-                                    false
+                                    return true
                                 }
+                                setBuildStatus("checker-2", "Checker2", "FAILURE")
+                                input "Retry the job?"
+                                return false
                             }
                         }
                     }
