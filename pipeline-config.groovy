@@ -22,7 +22,7 @@ pipeline {
                     steps {
                         waitUntil {
                             setBuildStatus("checker-1", "Checker1", "PENDING")
-                            step {
+                            script {
                                 try {
                                     TestWithFlaky()
                                     setBuildStatus("checker-1", "Checker1", "SUCCESS")
@@ -39,7 +39,7 @@ pipeline {
                     steps {
                         waitUntil {
                             setBuildStatus("checker-2", "Checker2", "PENDING")
-                            step {
+                            script {
                                 try {
                                     TestWithFlaky()
                                     setBuildStatus("checker-2", "Checker2", "SUCCESS")
